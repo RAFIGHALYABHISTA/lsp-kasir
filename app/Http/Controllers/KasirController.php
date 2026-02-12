@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Transaksi;
 use App\Models\TransaksiDetail;
+use App\Models\Customer;
 
 class KasirController extends Controller
 {
@@ -13,7 +14,9 @@ class KasirController extends Controller
     {
         $barangs = Barang::all();
         $keranjang = session('keranjang', []);
-        return view('kasir.index', compact('barangs', 'keranjang'));
+        $total = !empty($keranjang) ? array_sum(array_column($keranjang, 'subtotal')) : 0;
+        $customers = Customer::all();
+        return view('kasir.index', compact('barangs', 'keranjang', 'total', 'customers'));
     }
 
     public function tambah(Request $request)
@@ -52,6 +55,10 @@ class KasirController extends Controller
 
     public function simpan(Request $request)
     {
+        $request->validate([
+            'customer_id' => 'nullable|exists:customers,id',
+        ]);
+
         $keranjang = session('keranjang', []);
 
         if (empty($keranjang)) {
@@ -60,7 +67,8 @@ class KasirController extends Controller
 
         $transaksi = Transaksi::create([
             'tanggal_transaksi' => now(),
-            'total' => array_sum(array_column($keranjang, 'subtotal'))
+            'total' => array_sum(array_column($keranjang, 'subtotal')),
+            'customer_id' => $request->customer_id,
         ]);
 
         foreach ($keranjang as $produk_id => $item) {
@@ -80,12 +88,12 @@ class KasirController extends Controller
 
         session()->forget('keranjang');
 
-        return redirect()->route('kasir.invoice', $transaksi->id)->with('success', 'Transaksi berhasil disimpan');
+        return redirect()->route('admin.kasir.invoice', $transaksi->id)->with('success', 'Transaksi berhasil disimpan');
     }
 
     public function invoice($id)
     {
-        $transaksi = Transaksi::with('transaksiDetails.barang')->findOrFail($id);
+        $transaksi = Transaksi::with('transaksiDetails.barang', 'customer')->findOrFail($id);
         return view('kasir.invoice', compact('transaksi'));
     }
 

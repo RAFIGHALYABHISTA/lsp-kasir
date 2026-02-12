@@ -23,12 +23,10 @@ class AuthController extends Controller
 
         if (Auth::attempt($request->only('username', 'password'))) {
             $request->session()->regenerate();
-            return redirect()->intended('/admin');
+            return redirect()->intended('/admin')->with('success', 'Selamat datang ' . Auth::user()->name . '!');
         }
 
-        return back()->withErrors([
-            'username' => 'The provided credentials do not match our records.',
-        ]);
+        return back()->with('error', 'Username atau password salah!')->withInput();
     }
 
     public function logout(Request $request)
@@ -36,6 +34,11 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+        return redirect()->route('logout.success');
+    }
+
+    public function logoutSuccess()
+    {
+        return view('auth.logout');
     }
 }

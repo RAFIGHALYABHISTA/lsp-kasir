@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice #{{ $transaksi->id }}</title>
-    @vite('resources/css/app.css')
+    <title>Invoice #<?php echo e($transaksi->id); ?></title>
+    <?php echo app('Illuminate\Foundation\Vite')('resources/css/app.css'); ?>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
 
@@ -226,7 +226,7 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <div>
                         <span class="info-label">No. Invoice</span>
-                        <span class="info-value">#INV-{{ str_pad($transaksi->id, 6, '0', STR_PAD_LEFT) }}</span>
+                        <span class="info-value">#INV-<?php echo e(str_pad($transaksi->id, 6, '0', STR_PAD_LEFT)); ?></span>
                     </div>
                     <div>
                         <span class="info-label">Status</span>
@@ -234,11 +234,11 @@
                     </div>
                     <div>
                         <span class="info-label">Tanggal</span>
-                        <span class="info-value">{{ $transaksi->tanggal_transaksi->format('d/m/Y') }}</span>
+                        <span class="info-value"><?php echo e($transaksi->tanggal_transaksi->format('d/m/Y')); ?></span>
                     </div>
                     <div>
                         <span class="info-label">Waktu</span>
-                        <span class="info-value">{{ $transaksi->tanggal_transaksi->format('H:i') }} WIB</span>
+                        <span class="info-value"><?php echo e($transaksi->tanggal_transaksi->format('H:i')); ?> WIB</span>
                     </div>
                 </div>
             </div>
@@ -246,30 +246,31 @@
             <div class="info-section">
                 <h4>Informasi Pelanggan</h4>
                 <div class="customer-card">
-                    @if($transaksi->customer)
+                    <?php if($transaksi->customer): ?>
                         <span class="info-label">Nama Pelanggan</span>
-                        <span class="info-value" style="color: #4f46e5; font-size: 16px;">{{ strtoupper($transaksi->customer->nama) }}</span>
+                        <span class="info-value" style="color: #4f46e5; font-size: 16px;"><?php echo e(strtoupper($transaksi->customer->nama)); ?></span>
                         
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
                             <div>
                                 <span class="info-label">No. Telepon</span>
-                                <span class="info-value">{{ $transaksi->customer->no_telepon ?? '-' }}</span>
+                                <span class="info-value"><?php echo e($transaksi->customer->no_telepon ?? '-'); ?></span>
                             </div>
                             <div>
                                 <span class="info-label">Email</span>
-                                <span class="info-value" style="font-weight: 400;">{{ $transaksi->customer->email ?? '-' }}</span>
+                                <span class="info-value" style="font-weight: 400;"><?php echo e($transaksi->customer->email ?? '-'); ?></span>
                             </div>
                         </div>
 
                         <span class="info-label">Alamat</span>
                         <span class="info-value" style="font-weight: 400; font-size: 12px; margin-bottom: 0;">
-                            {{ $transaksi->customer->alamat ?? 'Alamat tidak terdaftar' }}
+                            <?php echo e($transaksi->customer->alamat ?? 'Alamat tidak terdaftar'); ?>
+
                         </span>
-                    @else
+                    <?php else: ?>
                         <div style="text-align: center; padding: 15px 0;">
                             <span style="color: #9ca3af; font-style: italic; font-size: 13px;">Pelanggan Umum (Guest)</span>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -284,17 +285,17 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($transaksi->transaksiDetails as $detail)
+                <?php $__currentLoopData = $transaksi->transaksiDetails; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $detail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <tr>
                     <td>
-                        <div style="font-weight: 600; color: #111827;">{{ $detail->barang->nama_barang }}</div>
-                        <div style="font-size: 11px; color: #9ca3af;">SKU: {{ $detail->barang->kode_barang ?? '-' }}</div>
+                        <div style="font-weight: 600; color: #111827;"><?php echo e($detail->barang->nama_barang); ?></div>
+                        <div style="font-size: 11px; color: #9ca3af;">SKU: <?php echo e($detail->barang->kode_barang ?? '-'); ?></div>
                     </td>
-                    <td style="text-align: center;">Rp {{ number_format($detail->harga_barang, 0, ',', '.') }}</td>
-                    <td style="text-align: center;">{{ $detail->qty }}</td>
-                    <td style="text-align: right; font-weight: 700; color: #111827;">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
+                    <td style="text-align: center;">Rp <?php echo e(number_format($detail->harga_barang, 0, ',', '.')); ?></td>
+                    <td style="text-align: center;"><?php echo e($detail->qty); ?></td>
+                    <td style="text-align: right; font-weight: 700; color: #111827;">Rp <?php echo e(number_format($detail->subtotal, 0, ',', '.')); ?></td>
                 </tr>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </tbody>
         </table>
 
@@ -302,7 +303,7 @@
             <div class="summary-table">
                 <div class="summary-row">
                     <span>Subtotal Produk</span>
-                    <span>Rp {{ number_format($transaksi->total, 0, ',', '.') }}</span>
+                    <span>Rp <?php echo e(number_format($transaksi->total, 0, ',', '.')); ?></span>
                 </div>
                 <div class="summary-row">
                     <span>Diskon / Promo</span>
@@ -314,7 +315,7 @@
                 </div>
                 <div class="summary-row total-row">
                     <span>Total Bayar</span>
-                    <span>Rp {{ number_format($transaksi->total, 0, ',', '.') }}</span>
+                    <span>Rp <?php echo e(number_format($transaksi->total, 0, ',', '.')); ?></span>
                 </div>
             </div>
         </div>
@@ -327,8 +328,8 @@
 
     <div class="actions">
         <button onclick="window.print()" class="btn btn-print">Cetak Invoice (PDF)</button>
-        <a href="{{ route('admin.kasir') }}" class="btn btn-back">Kembali ke Kasir</a>
+        <a href="<?php echo e(route('admin.kasir')); ?>" class="btn btn-back">Kembali ke Kasir</a>
     </div>
 
 </body>
-</html>
+</html><?php /**PATH D:\laragon\www\gudang\resources\views/kasir/invoice.blade.php ENDPATH**/ ?>

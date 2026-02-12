@@ -1,49 +1,10 @@
 @extends('layouts.sidebar')
 
-@section('title', 'Dashboard Admin')
-@section('subtitle', 'Kelola stok dan data barang gudang secara terpusat')
+@section('title', 'Inventory')
+@section('subtitle', 'Kelola inventaris barang')
 
 @section('content')
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-600">Total Barang</p>
-                    <p class="text-2xl font-bold text-slate-900">{{ count($barangs) }}</p>
-                </div>
-                <div class="p-3 bg-blue-50 rounded-lg">
-                    <i class="fa-solid fa-box-archive text-blue-600 text-xl"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-600">Barang Habis</p>
-                    <p class="text-2xl font-bold text-red-600">{{ $barangs->where('stok', '<=', 0)->count() }}</p>
-                </div>
-                <div class="p-3 bg-red-50 rounded-lg">
-                    <i class="fa-solid fa-exclamation-triangle text-red-600 text-xl"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-600">Barang Stok Rendah</p>
-                    <p class="text-2xl font-bold text-orange-600">{{ $barangs->where('stok', '>', 0)->where('stok', '<=', 10)->count() }}</p>
-                </div>
-                <div class="p-3 bg-orange-50 rounded-lg">
-                    <i class="fa-solid fa-chart-line text-orange-600 text-xl"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white">
             <h2 class="font-bold text-slate-800">Daftar Inventaris Terkini</h2>
             <div class="text-xs font-medium text-slate-400 uppercase tracking-wider">
@@ -91,7 +52,7 @@
                                 <a href="{{ route('admin.edit', $b->id) }}" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
                                     <i class="fa-solid fa-edit mr-1"></i> Edit
                                 </a>
-                                <form action="{{ route('admin.destroy', $b->id) }}" method="POST" class="inline form-delete-barang">
+                                <form action="{{ route('admin.destroy', $b->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus barang ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">
@@ -107,33 +68,10 @@
         </div>
     </div>
 
-    <!-- <div class="mt-6 flex justify-center">
+    <div class="mt-6 flex justify-center">
         <a href="{{ route('admin.create') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all active:scale-95">
             <i class="fa-solid fa-plus"></i>
             Tambah Barang Baru
         </a>
-    </div> -->
-
-    @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const deleteForms = document.querySelectorAll('.form-delete-barang');
-            
-            deleteForms.forEach(form => {
-                form.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    
-                    const namaBarang = form.closest('tr').querySelector('.font-semibold')?.textContent || 'barang ini';
-                    
-                    notify.confirm('Hapus Barang?', `Apakah Anda yakin ingin menghapus "${namaBarang}"? Tindakan ini tidak bisa dibatalkan.`).then((result) => {
-                        if (result.isConfirmed) {
-                            notify.loading('Menghapus barang...', 'Mohon tunggu');
-                            form.submit();
-                        }
-                    });
-                });
-            });
-        });
-    </script>
-    @endpush
+    </div>
 @endsection

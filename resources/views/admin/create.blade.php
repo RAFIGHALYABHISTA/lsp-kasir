@@ -5,7 +5,7 @@
 
 @section('content')
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <form action="{{ route('admin.store') }}" method="POST" class="p-8">
+        <form action="{{ route('admin.store') }}" method="POST" class="p-8" id="formTambahBarang">
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -49,10 +49,21 @@
                 <a href="{{ route('admin.index') }}" class="px-6 py-3 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition-all">
                     Batal
                 </a>
-                <button type="submit" class="px-6 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all active:scale-95">
+                <button type="submit" class="px-6 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all active:scale-95" id="btnSimpanBarang">
                     Simpan Barang
                 </button>
             </div>
         </form>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('formTambahBarang');
+            form.addEventListener('submit', () => {
+                notify.loading('Menyimpan barang...', 'Mohon tunggu');
+            });
+        });
+    </script>
+    @endpush
 @endsection

@@ -8,7 +8,7 @@ class Transaksi extends Model
 {
     //
     protected $table = 'transaksi';
-    protected $fillable = ['tanggal_transaksi','total' ];
+    protected $fillable = ['tanggal_transaksi','total', 'customer_id' ];
     protected $casts = [
         'tanggal_transaksi' => 'datetime',
     ];
@@ -16,5 +16,10 @@ class Transaksi extends Model
     public function transaksiDetails()
     {
         return $this->hasMany(TransaksiDetail::class, 'transaksi_id');
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 }

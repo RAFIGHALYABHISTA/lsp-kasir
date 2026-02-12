@@ -5,7 +5,7 @@
 
 @section('content')
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <form action="{{ route('admin.update', $barang->id) }}" method="POST" class="p-8">
+        <form action="{{ route('admin.update', $barang->id) }}" method="POST" class="p-8" id="formEditBarang">
             @csrf
             @method('PUT')
 
@@ -56,4 +56,14 @@
             </div>
         </form>
     </div>
-@endsection
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('formEditBarang');
+            form.addEventListener('submit', () => {
+                notify.loading('Memperbarui barang...', 'Mohon tunggu');
+            });
+        });
+    </script>
+    @endpush

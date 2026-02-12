@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin Dashboard') - Sistem Kasir</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <title><?php echo $__env->yieldContent('title', 'Admin Dashboard'); ?> - Sistem Kasir</title>
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script type="application/json" id="flash-messages">
     {
-        "success": @json(session('success')),
-        "error": @json(session('error')),
-        "warning": @json(session('warning')),
-        "info": @json(session('info'))
+        "success": <?php echo json_encode(session('success'), 15, 512) ?>,
+        "error": <?php echo json_encode(session('error'), 15, 512) ?>,
+        "warning": <?php echo json_encode(session('warning'), 15, 512) ?>,
+        "info": <?php echo json_encode(session('info'), 15, 512) ?>
     }
     </script>
     <style>
@@ -190,25 +190,25 @@
         <nav class="sidebar-menu">
             <span class="menu-label">Main Menu</span>
             <li class="menu-item">
-                <a href="{{ route('admin.index') }}" class="menu-link {{ request()->routeIs('admin.index') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.index')); ?>" class="menu-link <?php echo e(request()->routeIs('admin.index') ? 'active' : ''); ?>">
                     <i class="fa-solid fa-house"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
             <li class="menu-item">
-                <a href="{{ route('admin.inventory') }}" class="menu-link {{ request()->routeIs('admin.inventory') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.inventory')); ?>" class="menu-link <?php echo e(request()->routeIs('admin.inventory') ? 'active' : ''); ?>">
                     <i class="fa-solid fa-box-archive"></i>
                     <span>Inventory</span>
                 </a>
             </li>
             <li class="menu-item">
-                <a href="{{ route('admin.kasir') }}" class="menu-link {{ request()->routeIs('admin.kasir') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.kasir')); ?>" class="menu-link <?php echo e(request()->routeIs('admin.kasir') ? 'active' : ''); ?>">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <span>Kasir</span>
                 </a>
             </li>
             <li class="menu-item">
-                <a href="{{ route('admin.customers') }}" class="menu-link {{ request()->routeIs('admin.customers*') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.customers')); ?>" class="menu-link <?php echo e(request()->routeIs('admin.customers*') ? 'active' : ''); ?>">
                     <i class="fa-solid fa-users"></i>
                     <span>Customer</span>
                 </a>
@@ -216,7 +216,7 @@
 
             <span class="menu-label" style="margin-top: 25px;">Reports & Stats</span>
             <li class="menu-item">
-                <a href="{{ route('admin.laporan') }}" class="menu-link {{ request()->routeIs('admin.laporan') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.laporan')); ?>" class="menu-link <?php echo e(request()->routeIs('admin.laporan') ? 'active' : ''); ?>">
                     <i class="fa-solid fa-chart-line"></i>
                     <span>Laporan</span>
                 </a>
@@ -232,13 +232,13 @@
         </nav>
 
         <div class="sidebar-footer">
-            <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}&background=3b82f6&color=fff" alt="Avatar" class="user-avatar">
+            <img src="https://ui-avatars.com/api/?name=<?php echo e(Auth::user()->name); ?>&background=3b82f6&color=fff" alt="Avatar" class="user-avatar">
             <div class="user-info">
-                <span class="user-name">{{ Auth::user()->name }}</span>
+                <span class="user-name"><?php echo e(Auth::user()->name); ?></span>
                 <span class="user-role">Administrator</span>
             </div>
-            <form method="POST" action="{{ route('logout') }}" style="margin-left: auto;">
-                @csrf
+            <form method="POST" action="<?php echo e(route('logout')); ?>" style="margin-left: auto;">
+                <?php echo csrf_field(); ?>
                 <button type="submit" style="background: none; border: none; color: #ef4444; cursor: pointer;">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
@@ -248,12 +248,12 @@
 
     <main class="main-content">
         <div class="content-header">
-            <h1 class="page-title">@yield('title', 'Dashboard')</h1>
-            <p class="page-subtitle">@yield('subtitle', 'Kelola sistem gudang Anda')</p>
+            <h1 class="page-title"><?php echo $__env->yieldContent('title', 'Dashboard'); ?></h1>
+            <p class="page-subtitle"><?php echo $__env->yieldContent('subtitle', 'Kelola sistem gudang Anda'); ?></p>
         </div>
 
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </main>
 
 </body>
-</html>
+</html><?php /**PATH D:\laragon\www\gudang\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>
