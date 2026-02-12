@@ -10,6 +10,60 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
+                <div>
+                    <label for="kode_barang" class="block text-sm font-semibold text-slate-700 mb-2">Kode Produk</label>
+                    <input type="text" name="kode_barang" id="kode_barang"
+                           class="w-full px-4 py-3 rounded-xl border-slate-200 focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all placeholder:text-slate-400 <?php $__errorArgs = ['kode_barang'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-red-500 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                           placeholder="Contoh: KPB001" value="<?php echo e(old('kode_barang')); ?>">
+                    <?php $__errorArgs = ['kode_barang'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-2 text-xs text-red-600 font-medium"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+
+                <div>
+                    <label for="kategori_id" class="block text-sm font-semibold text-slate-700 mb-2">Kategori</label>
+                    <select name="kategori_id" id="kategori_id" class="w-full px-4 py-3 rounded-xl border-slate-200 focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all <?php $__errorArgs = ['kategori_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-red-500 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
+                        <option value="">Pilih Kategori</option>
+                        <?php $__currentLoopData = $kategoris; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($kat->id); ?>" <?php echo e(old('kategori_id') == $kat->id ? 'selected' : ''); ?>>
+                                <?php echo e($kat->nama_kategori); ?>
+
+                            </option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </select>
+                    <?php $__errorArgs = ['kategori_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-2 text-xs text-red-600 font-medium"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+
                 <div class="md:col-span-2">
                     <label for="nama_barang" class="block text-sm font-semibold text-slate-700 mb-2">Nama Produk</label>
                     <input type="text" name="nama_barang" id="nama_barang"
@@ -100,10 +154,13 @@ unset($__errorArgs, $__bag); ?>
 
     <?php $__env->startPush('scripts'); ?>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('formTambahBarang');
-            form.addEventListener('submit', () => {
-                notify.loading('Menyimpan barang...', 'Mohon tunggu');
+        document.getElementById('formTambahBarang').addEventListener('submit', () => {
+            Swal.fire({
+                title: 'Menyimpan...',
+                text: 'Mohon tunggu',
+                didOpen: () => Swal.showLoading(),
+                allowOutsideClick: false,
+                allowEscapeKey: false
             });
         });
     </script>

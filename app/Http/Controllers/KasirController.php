@@ -13,16 +13,20 @@ class KasirController extends Controller
     public function index(Request $request)
     {
         $barangs = Barang::all();
-        $keranjang = session('keranjang', []);
-        $total = !empty($keranjang) ? array_sum(array_column($keranjang, 'subtotal')) : 0;
-        $customers = Customer::all();
-        return view('kasir.index', compact('barangs', 'keranjang', 'total', 'customers'));
+        return view('kasir.index', compact('barangs'));
     }
 
     public function tambah(Request $request)
     {
+        $request->validate([
+            'produk_id' => 'required|exists:barang,id',
+            'qty' => 'required|integer|min:1',
+            'harga' => 'required|numeric|min:100'
+        ]);
+
         $produk_id = $request->produk_id;
         $qty = $request->qty;
+        $harga_manual = $request->harga;
 
         $barang = Barang::find($produk_id);
         if (!$barang) {
@@ -40,9 +44,9 @@ class KasirController extends Controller
         } else {
             $keranjang[$produk_id] = [
                 'nama' => $barang->nama_barang,
-                'harga' => $barang->harga_barang,
+                'harga' => $harga_manual,  // Use manual price from kasir
                 'qty' => $qty,
-                'subtotal' => $barang->harga_barang * $qty
+                'subtotal' => $harga_manual * $qty
             ];
         }
 
@@ -56,44 +60,80 @@ class KasirController extends Controller
     public function simpan(Request $request)
     {
         $request->validate([
-            'customer_id' => 'nullable|exists:customers,id',
+            'produk_id' => 'required|exists:barang,id',
+            'qty' => 'required|integer|min:1',
+            'uang_pelanggan' => 'required|numeric|min:0',
+            'customer_name' => 'nullable|string|max:255',
         ]);
 
-        $keranjang = session('keranjang', []);
+        $barang = Barang::find($request->produk_id);
+        if (!$barang) {
+            return back()->with('error', 'Produk tidak ditemukan');
+        }
 
-        if (empty($keranjang)) {
-            return back()->with('error', 'Keranjang kosong');
+        if ($barang->stok < $request->qty) {
+            return back()->with('error', 'Stok tidak cukup');
+        }
+
+        $harga = $barang->harga_barang;
+        $subtotal = $harga * $request->qty;
+
+        // create or find customer if any customer data provided
+        $customerId = null;
+        if ($request->customer_name || $request->customer_email || $request->customer_phone || $request->customer_address) {
+            $found = null;
+            if ($request->customer_email) {
+                $found = Customer::where('email', $request->customer_email)->first();
+            }
+            if (!$found && $request->customer_name) {
+                $found = Customer::where('nama', $request->customer_name)->first();
+            }
+
+            if ($found) {
+                $found->no_telepon = $request->customer_phone ?? $found->no_telepon;
+                $found->alamat = $request->customer_address ?? $found->alamat;
+                $found->email = $request->customer_email ?? $found->email;
+                $found->save();
+                $customerId = $found->id;
+            } else {
+                $customer = Customer::create([
+                    'nama' => $request->customer_name ?? 'Pelanggan',
+                    'no_telepon' => $request->customer_phone ?? null,
+                    'alamat' => $request->customer_address ?? null,
+                    'email' => $request->customer_email ?? null,
+                ]);
+                $customerId = $customer->id;
+            }
         }
 
         $transaksi = Transaksi::create([
             'tanggal_transaksi' => now(),
-            'total' => array_sum(array_column($keranjang, 'subtotal')),
-            'customer_id' => $request->customer_id,
+            'total' => $subtotal,
+            'customer_id' => $customerId,
         ]);
 
-        foreach ($keranjang as $produk_id => $item) {
-            TransaksiDetail::create([
-                'transaksi_id' => $transaksi->id,
-                'barang_id' => $produk_id,
-                'qty' => $item['qty'],
-                'harga_barang' => $item['harga'],
-                'subtotal' => $item['subtotal']
-            ]);
+        TransaksiDetail::create([
+            'transaksi_id' => $transaksi->id,
+            'barang_id' => $barang->id,
+            'qty' => $request->qty,
+            'harga_barang' => $harga,
+            'subtotal' => $subtotal
+        ]);
 
-            // Kurangi stok
-            $barang = Barang::find($produk_id);
-            $barang->stok -= $item['qty'];
-            $barang->save();
-        }
+        // Kurangi stok
+        $barang->stok -= $request->qty;
+        $barang->save();
 
-        session()->forget('keranjang');
+        // Store uang_pelanggan and kembalian in session to pass to invoice
+        $kembalian = $request->uang_pelanggan - $subtotal;
+        session(['uang_diterima' => $request->uang_pelanggan, 'kembalian' => $kembalian]);
 
         return redirect()->route('admin.kasir.invoice', $transaksi->id)->with('success', 'Transaksi berhasil disimpan');
     }
 
     public function invoice($id)
     {
-        $transaksi = Transaksi::with('transaksiDetails.barang', 'customer')->findOrFail($id);
+        $transaksi = Transaksi::with('transaksiDetails.barang.kategori', 'customer')->findOrFail($id);
         return view('kasir.invoice', compact('transaksi'));
     }
 

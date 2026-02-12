@@ -11,11 +11,58 @@
     </div>
 <?php endif; ?>
 
+<!-- Filter Section -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+    <h3 class="font-bold text-slate-800 mb-4">Filter Transaksi</h3>
+    <form action="<?php echo e(route('admin.laporan')); ?>" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+            <label for="month" class="block text-sm font-semibold text-slate-700 mb-2">Bulan</label>
+            <select name="month" id="month" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none">
+                <option value="">Semua Bulan</option>
+                <?php $__currentLoopData = $months; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $m): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e($m); ?>" <?php echo e($month == $m ? 'selected' : ''); ?>>
+                        <?php echo e(['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'][$m]); ?>
+
+                    </option>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </select>
+        </div>
+        <div>
+            <label for="year" class="block text-sm font-semibold text-slate-700 mb-2">Tahun</label>
+            <select name="year" id="year" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none">
+                <option value="">Semua Tahun</option>
+                <?php $__currentLoopData = $years; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $y): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e($y); ?>" <?php echo e($year == $y ? 'selected' : ''); ?>><?php echo e($y); ?></option>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </select>
+        </div>
+        <div>
+            <label for="search" class="block text-sm font-semibold text-slate-700 mb-2">Cari</label>
+            <input type="text" name="search" id="search" placeholder="ID Transaksi / Customer"
+                   class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none"
+                   value="<?php echo e($search ?? ''); ?>">
+        </div>
+        <div class="flex items-end gap-2">
+            <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all">
+                <i class="fa-solid fa-search mr-1"></i> Cari
+            </button>
+            <a href="<?php echo e(route('admin.laporan')); ?>" class="px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 font-semibold transition-all">
+                <i class="fa-solid fa-undo"></i>
+            </a>
+        </div>
+    </form>
+</div>
+
 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
     <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white">
         <h2 class="font-bold text-slate-800">Riwayat Transaksi</h2>
-        <div class="text-xs font-medium text-slate-400 uppercase tracking-wider">
-            Total: <?php echo e(count($transaksis)); ?> Transaksi
+        <div class="flex items-center gap-3">
+            <div class="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                Total: <?php echo e(count($transaksis)); ?> Transaksi
+            </div>
+            <a href="<?php echo e(route('admin.laporan.export', ['month' => $month, 'year' => $year, 'search' => $search])); ?>" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition-all">
+                <i class="fa-solid fa-download mr-1"></i> Export CSV
+            </a>
         </div>
     </div>
 

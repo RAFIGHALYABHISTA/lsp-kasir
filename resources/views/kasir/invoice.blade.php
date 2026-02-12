@@ -288,7 +288,7 @@
                 <tr>
                     <td>
                         <div style="font-weight: 600; color: #111827;">{{ $detail->barang->nama_barang }}</div>
-                        <div style="font-size: 11px; color: #9ca3af;">SKU: {{ $detail->barang->kode_barang ?? '-' }}</div>
+                        <div style="font-size: 11px; color: #9ca3af;">SKU: {{ $detail->barang->kode_barang ?? '-' }} | Kategori: <strong>{{ $detail->barang->kategori?->nama_kategori ?? '-' }}</strong></div>
                     </td>
                     <td style="text-align: center;">Rp {{ number_format($detail->harga_barang, 0, ',', '.') }}</td>
                     <td style="text-align: center;">{{ $detail->qty }}</td>
@@ -315,6 +315,14 @@
                 <div class="summary-row total-row">
                     <span>Total Bayar</span>
                     <span>Rp {{ number_format($transaksi->total, 0, ',', '.') }}</span>
+                </div>
+                <div class="summary-row" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
+                    <span style="font-weight: 600;">Uang Diterima</span>
+                    <span style="font-weight: 600; color: #059669;">Rp {{ number_format(session('uang_diterima', $transaksi->total), 0, ',', '.') }}</span>
+                </div>
+                <div class="summary-row">
+                    <span style="font-weight: 700; color: #111827; font-size: 16px;">Kembalian</span>
+                    <span style="font-weight: 700; color: #059669; font-size: 16px;">Rp {{ number_format(session('kembalian', 0), 0, ',', '.') }}</span>
                 </div>
             </div>
         </div>

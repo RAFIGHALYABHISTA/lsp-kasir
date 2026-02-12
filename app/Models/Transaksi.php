@@ -22,4 +22,9 @@ class Transaksi extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+
+    public function refunds()
+    {
+        return $this->hasMany(Refund::class, 'transaksi_id');
+    }
 }

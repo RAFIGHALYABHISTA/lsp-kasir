@@ -29,7 +29,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/inventory', [AdminController::class, 'inventory'])->name('admin.inventory');
     Route::get('/admin/inventory/export', [AdminController::class, 'exportInventory'])->name('admin.inventory.export');
     Route::get('/admin/laporan', [AdminController::class, 'laporan'])->name('admin.laporan');
+    Route::get('/admin/laporan/export', [AdminController::class, 'exportLaporan'])->name('admin.laporan.export');
     Route::delete('/admin/laporan/{transaksi}', [AdminController::class, 'destroyTransaksi'])->name('admin.laporan.destroy');
+
+    // Kategori routes
+    Route::get('/admin/kategoris', [AdminController::class, 'kategoris'])->name('admin.kategoris');
+    Route::post('/admin/kategoris', [AdminController::class, 'storeKategori'])->name('admin.kategoris.store');
+    Route::put('/admin/kategoris/{kategori}', [AdminController::class, 'updateKategori'])->name('admin.kategoris.update');
+    Route::delete('/admin/kategoris/{kategori}', [AdminController::class, 'destroyKategori'])->name('admin.kategoris.destroy');
 
     // Customer routes
     Route::get('/admin/customers', [AdminController::class, 'customers'])->name('admin.customers');

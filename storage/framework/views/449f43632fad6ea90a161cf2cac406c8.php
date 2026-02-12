@@ -7,6 +7,8 @@
     <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script type="application/json" id="flash-messages">
     {
         "success": <?php echo json_encode(session('success'), 15, 512) ?>,
@@ -184,7 +186,7 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="logo-icon">G</div>
-            <span class="logo-text">CASHIER APP</span>
+            <span class="logo-text">GholsirApp</span>
         </div>
 
         <nav class="sidebar-menu">
@@ -218,7 +220,15 @@
             <li class="menu-item">
                 <a href="<?php echo e(route('admin.laporan')); ?>" class="menu-link <?php echo e(request()->routeIs('admin.laporan') ? 'active' : ''); ?>">
                     <i class="fa-solid fa-chart-line"></i>
-                    <span>Laporan</span>
+                    <span>Laporan Transaksi</span>
+                </a>
+            </li>
+
+            <span class="menu-label" style="margin-top: 25px;">Management</span>
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.kategoris')); ?>" class="menu-link <?php echo e(request()->routeIs('admin.kategoris*') ? 'active' : ''); ?>">
+                    <i class="fa-solid fa-tag"></i>
+                    <span>Kategori</span>
                 </a>
             </li>
 
@@ -253,7 +263,10 @@
         </div>
 
         <?php echo $__env->yieldContent('content'); ?>
-    </main>
+</main>
+
+    
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 
 </body>
 </html><?php /**PATH D:\laragon\www\gudang\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>

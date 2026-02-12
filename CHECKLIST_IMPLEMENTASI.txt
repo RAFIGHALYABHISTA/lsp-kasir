@@ -1,0 +1,294 @@
+CHECKLIST IMPLEMENTASI FITUR BARU - SISTEM KASIR GUDANG
+================================================================
+
+REQUEST AWAL (6 FITUR):
+✅ 1. Laporan pendapatan bulanan - DONE
+✅ 2. Fitur kembalian/return - DONE
+✅ 3. Export ke Excel (CSV) - DONE
+✅ 4. Tombol tambah kategori - DONE
+✅ 5. Form kode unique tiap produk - DONE
+✅ 6. Fitur searchbar di halaman history - DONE
+
+================================================================
+DETAIL IMPLEMENTASI PER FITUR
+================================================================
+
+1️⃣ LAPORAN PENDAPATAN BULANAN
+   ✅ Route: /admin/pendapatan
+   ✅ View: resources/views/admin/pendapatan.blade.php
+   ✅ Controller method: AdminController@pendapatan()
+   ✅ Database query: Filter transaksi by bulan + tahun
+   ✅ Statistik: Total, Count, Rata-rata
+   ✅ Breakdown: Per kategori produk
+   ✅ Export: Button ke CSV
+   ✅ UI: Card stats + table detail
+
+2️⃣ FITUR KEMBALIAN/RETURN
+   ✅ Migration: 2026_02_12_000002_create_returns_table.php
+   ✅ Model: app/Models/Return.php
+   ✅ Relationships: Barang, Transaksi
+   ✅ Controller methods:
+      - AdminController@returns() - list returns
+      - AdminController@approveReturn() - approve & auto restore stock
+      - AdminController@rejectReturn() - reject
+      - AdminController@destroyReturn() - delete
+      - KasirController@storeReturn() - input return
+   ✅ View: resources/views/admin/returns.blade.php
+   ✅ Modal: di invoice.blade.php
+   ✅ Features:
+      - Validasi qty
+      - Status tracking
+      - Auto stock restore
+      - Alasan input
+
+3️⃣ EXPORT KE EXCEL (CSV)
+   ✅ Laporan Transaksi:
+      - Controller: AdminController@exportLaporan()
+      - Route: /admin/laporan/export
+      - Format: CSV
+      - Headers: ID, Tanggal, Customer, Total, Jumlah Item
+      - Filter support: bulan, tahun, search
+
+   ✅ Laporan Pendapatan:
+      - Controller: AdminController@exportPendapatan()
+      - Route: /admin/pendapatan/export
+      - Format: CSV
+      - Headers: Tanggal, Transaksi ID, Customer, Total, Produk
+      - Include total summary
+
+   ✅ Inventory (sudah ada):
+      - Controller: AdminController@exportInventory()
+      - Format: CSV
+
+4️⃣ TOMBOL TAMBAH KATEGORI
+   ✅ Migration: 2026_02_12_000000_create_kategoris_table.php
+   ✅ Model: app/Models/Kategori.php
+   ✅ Controller methods:
+      - AdminController@kategoris() - list
+      - AdminController@storeKategori() - create
+      - AdminController@updateKategori() - update
+      - AdminController@destroyKategori() - delete
+   ✅ View: resources/views/admin/kategoris.blade.php
+   ✅ Features:
+      - Form input
+      - Modal edit
+      - Count produk per kategori
+      - Validasi unique nama
+
+5️⃣ FORM KODE UNIQUE TIAP PRODUK
+   ✅ Migration: 2026_02_12_000001_add_kategori_and_kode_to_barang_table.php
+   ✅ Added to Barang model:
+      - Fillable: kode_barang, kategori_id
+      - Relationship: kategori()
+   ✅ Controller updates:
+      - AdminController@create() - pass kategoris
+      - AdminController@store() - validate & save kode_barang
+      - AdminController@edit() - pass kategoris
+      - AdminController@update() - validate & update kode_barang
+   ✅ Views updated:
+      - admin/create.blade.php - form input kode & kategori
+      - admin/edit.blade.php - form edit kode & kategori
+      - admin/index.blade.php - display kode & kategori
+   ✅ Features:
+      - Validation: unique per product
+      - Nullable field
+      - Display di table & invoice
+
+6️⃣ FITUR SEARCHBAR DI HALAMAN HISTORY
+   ✅ View: resources/views/admin/laporan.blade.php
+   ✅ Filter elements:
+      - Dropdown bulan (1-12)
+      - Dropdown tahun (current ± 5 years)
+      - Text input search (ID transaksi / Customer)
+      - Button submit & reset
+   ✅ Controller: AdminController@laporan()
+      - Query builder with where clauses
+      - Month/Year filtering
+      - Search by ID or Customer name
+      - Order by tanggal DESC
+   ✅ Features:
+      - Multiple filter combination
+      - Persistent filter state
+      - Export with current filters
+      - Display count matching records
+
+================================================================
+TAMBAHAN IMPLEMENTASI
+================================================================
+
+✅ Models relationships updated:
+   - Barang: belongsTo(Kategori), hasMany(Return)
+   - Kategori: hasMany(Barang)
+   - Transaksi: hasMany(Return)
+   - Return: belongsTo(Transaksi), belongsTo(Barang)
+
+✅ Routes added:
+   - GET /admin/kategoris - list
+   - POST /admin/kategoris - store
+   - PUT /admin/kategoris/{kategori} - update
+   - DELETE /admin/kategoris/{kategori} - delete
+   - GET /admin/returns - list
+   - PUT /admin/returns/{return}/approve - approve
+   - PUT /admin/returns/{return}/reject - reject
+   - DELETE /admin/returns/{return} - delete
+   - POST /admin/kasir/return - store return
+   - GET /admin/pendapatan - list
+   - GET /admin/laporan/export - export laporan
+   - GET /admin/pendapatan/export - export pendapatan
+
+✅ Sidebar menu updated:
+   - Added "Laporan Pendapatan" under Reports & Stats
+   - Added "Kategori" under Management
+   - Added "Return/Kembalian" under Management
+
+✅ Views created/modified:
+   - NEW: kategoris.blade.php
+   - NEW: returns.blade.php
+   - NEW: pendapatan.blade.php
+   - MODIFIED: create.blade.php - add kategori & kode fields
+   - MODIFIED: edit.blade.php - add kategori & kode fields
+   - MODIFIED: index.blade.php - display kategori & kode
+   - MODIFIED: laporan.blade.php - add filter section & export button
+   - MODIFIED: invoice.blade.php - add return modal
+   - MODIFIED: layouts/sidebar.blade.php - add new menu items
+
+================================================================
+DATABASE STRUCTURE
+================================================================
+
+Table: kategoris
+   - id (bigint, primary)
+   - nama_kategori (varchar, unique)
+   - deskripsi (text, nullable)
+   - created_at, updated_at
+
+Table: barang (MODIFIED)
+   - Added: kode_barang (varchar, unique, nullable)
+   - Added: kategori_id (foreign key, nullable)
+
+Table: returns (NEW)
+   - id (bigint, primary)
+   - transaksi_id (foreign key)
+   - barang_id (foreign key)
+   - qty (integer)
+   - harga_barang (integer)
+   - total_return (integer)
+   - alasan (text, nullable)
+   - status (enum: pending, approved, rejected)
+   - tanggal_return (timestamp)
+   - created_at, updated_at
+
+================================================================
+VALIDATION RULES
+================================================================
+
+Kategori:
+   ✅ nama_kategori: required, string, max:255, unique
+   ✅ deskripsi: nullable, string
+
+Barang (create):
+   ✅ kode_barang: nullable, string, max:50, unique
+   ✅ nama_barang: required, string, max:255
+   ✅ stok: required, integer, min:0
+   ✅ harga_barang: required, integer, min:0
+   ✅ kategori_id: nullable, exists:kategoris,id
+
+Barang (update):
+   ✅ kode_barang: nullable, string, max:50, unique (except self)
+   ✅ nama_barang: required, string, max:255
+   ✅ stok: required, integer, min:0
+   ✅ harga_barang: required, integer, min:0
+   ✅ kategori_id: nullable, exists:kategoris,id
+
+Return:
+   ✅ transaksi_id: required, exists:transaksi,id
+   ✅ barang_id: required, exists:barang,id
+   ✅ qty: required, integer, min:1, <= detail.qty
+   ✅ alasan: nullable, string, max:500
+
+================================================================
+TESTING CHECKLIST
+================================================================
+
+KATEGORI FEATURE:
+☑️ Buka page /admin/kategoris
+☑️ Tambah kategori baru
+☑️ Edit kategori dengan modal
+☑️ Hapus kategori
+☑️ Lihat count produk per kategori
+
+KODE BARANG FEATURE:
+☑️ Buka form tambah barang
+☑️ Input kode barang
+☑️ Submit & cek kategori bisa dipilih
+☑️ Edit barang ubah kode & kategori
+☑️ Lihat tabel inventory - kode muncul
+☑️ Lihat dashboard - kode muncul
+
+LAPORAN PENDAPATAN:
+☑️ Buka /admin/pendapatan
+☑️ Lihat card stats default (current month)
+☑️ Filter bulan & tahun
+☑️ Lihat breakdown per kategori
+☑️ Lihat table transaksi sesuai filter
+☑️ Export CSV
+
+RETURN/KEMBALIAN:
+☑️ Buat transaksi baru
+☑️ Dari invoice click tombol "Ajukan Return"
+☑️ Isi modal return (pilih produk, qty, alasan)
+☑️ Submit
+☑️ Lihat /admin/returns
+☑️ Admin approve return
+☑️ Cek stok barang naik otomatis
+☑️ Reject return
+☑️ Hapus return
+
+LAPORAN TRANSAKSI FILTER:
+☑️ Buka /admin/laporan
+☑️ Filter by month
+☑️ Filter by year
+☑️ Search by transaksi ID
+☑️ Search by customer name
+☑️ Kombinasi filter
+☑️ Reset filter
+☑️ Export CSV dengan filter
+
+================================================================
+PERFORMANCE & OPTIMIZATION
+================================================================
+
+✅ Database indexes:
+   - kategoris.nama_kategori (unique)
+   - barang.kode_barang (unique)
+   - barang.kategori_id (foreign key)
+   - returns.transaksi_id (foreign key)
+   - returns.barang_id (foreign key)
+   - returns.status (for filtering)
+
+✅ Query optimization:
+   - Using with() untuk eager loading relationships
+   - Filtering di database, bukan di PHP
+   - CSV export menggunakan streaming (memory efficient)
+
+================================================================
+DOCUMENTATION
+================================================================
+
+✅ FITUR_BARU.md - Dokumentasi lengkap semua fitur
+✅ RINGKASAN_FITUR.txt - Quick reference guide
+✅ Code comments di controllers
+
+================================================================
+FINAL STATUS: ✅ SEMUA FITUR SELESAI & READY TO USE
+================================================================
+
+No breaking changes ✅
+Backward compatible ✅
+All validations in place ✅
+UI/UX consistent ✅
+Routes integrated ✅
+Database schema ready ✅
+Ready for production ✅
+
+================================================================

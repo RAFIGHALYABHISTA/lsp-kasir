@@ -1,0 +1,444 @@
+PANDUAN PENGGUNAAN FITUR-FITUR BARU
+==============================================================================
+
+📋 DAFTAR ISI:
+1. Laporan Pendapatan Bulanan
+2. Fitur Return/Kembalian
+3. Export Data ke CSV
+4. Manajemen Kategori Produk
+5. Kode Produk Unik
+6. Filter Laporan Transaksi
+
+==============================================================================
+1️⃣ LAPORAN PENDAPATAN BULANAN
+==============================================================================
+
+AKSES:
+┌─ Sidebar Menu
+│  └─ Reports & Stats
+│     └─ Laporan Pendapatan
+
+LANGKAH-LANGKAH:
+1. Klik "Laporan Pendapatan" di menu sidebar
+2. Lihat 3 card di atas:
+   • Total Pendapatan - jumlah uang masuk untuk period ini
+   • Total Transaksi - jumlah transaksi yang terjadi
+   • Rata-rata Transaksi - total pendapatan / jumlah transaksi
+
+3. FILTER LAPORAN:
+   • Pilih Bulan (dropdown)
+   • Pilih Tahun (dropdown)
+   • Klik tombol "Filter"
+   • Data akan update sesuai pilihan
+
+4. LIHAT HASIL:
+   • "Pendapatan Per Kategori" - breakdown berdasarkan kategori produk
+   • "Statistik" - info singkat periode yang dipilih
+   • Tabel bawah - detail lengkap setiap transaksi
+
+5. EXPORT:
+   • Klik tombol "Export CSV" di sebelah Filter
+   • File CSV akan otomatis diunduh
+   • Buka di Excel atau Google Sheets
+
+CONTOH PENGGUNAAN:
+├─ Ingin tahu pendapatan bulan Januari 2026?
+│  └─ Pilih Bulan: Januari, Tahun: 2026 > Filter
+├─ Ingin pendapatan per kategori?
+│  └─ Lihat di bagian "Pendapatan Per Kategori"
+└─ Ingin export untuk analisis lebih lanjut?
+   └─ Klik "Export CSV"
+
+==============================================================================
+2️⃣ FITUR RETURN/KEMBALIAN
+==============================================================================
+
+AKSES:
+Admin View Return List:
+┌─ Sidebar Menu
+│  └─ Management
+│     └─ Return/Kembalian
+
+Kasir Input Return:
+┌─ Halaman Invoice
+│  └─ Tombol "Ajukan Return/Kembalian"
+
+LANGKAH KASIR - INPUT RETURN:
+1. Selesai transaksi, akan dikirim ke halaman Invoice
+2. Di halaman invoice, cari tombol orange "Ajukan Return/Kembalian"
+3. Klik tombol tersebut
+4. Modal popup akan muncul dengan form:
+   
+   Pilih Produk:
+   ├─ Dropdown daftar produk yang dibeli (yang bisa di-return)
+   └─ Setiap produk menunjukkan jumlah yang dibeli
+   
+   Jumlah Kembalian:
+   ├─ Input berapa banyak barang yang dikembalikan
+   └─ Validasi: tidak boleh melebihi jumlah yang dibeli
+   
+   Alasan Kembalian:
+   ├─ Textarea untuk jelaskan alasan return
+   └─ Contoh: "Barang rusak", "Tidak sesuai pesanan", dll
+
+5. Klik "Kirim Return"
+6. Sistem akan mencatat return dengan status "Pending"
+7. Tunggu admin untuk approve/reject
+
+LANGKAH ADMIN - MANAGE RETURN:
+1. Klik "Return/Kembalian" di menu sidebar
+2. Lihat tabel semua return yang masuk
+3. Kolom Status menunjukkan:
+   • "Pending" (kuning) = menunggu keputusan
+   • "Disetujui" (hijau) = sudah diapprove
+   • "Ditolak" (merah) = sudah direject
+
+4. ACTION untuk Pending Return:
+   ├─ ✓ (Approve) - Setujui return, stok otomatis dikembalikan
+   ├─ ✗ (Reject) - Tolak return
+   └─ 🗑️ (Hapus) - Hapus record return
+
+5. ACTION untuk Approved/Rejected Return:
+   └─ 🗑️ (Hapus) - Hapus record return
+
+CONTOH:
+├─ Pelanggan beli barang, kasir buat transaksi
+├─ Pelanggan mau return barang
+├─ Kasir klik "Ajukan Return/Kembalian" di invoice
+├─ Isi form: Pilih barang, qty, alasan
+├─ Admin lihat di "Return/Kembalian" page
+├─ Admin klik approve
+└─ Stok barang otomatis bertambah
+
+FITUR OTOMATIS:
+✅ Saat admin approve return:
+   • Status berubah dari "Pending" ke "Disetujui"
+   • Stok barang otomatis ditambah kembali
+   • Tidak perlu update stok manual
+
+==============================================================================
+3️⃣ EXPORT DATA KE CSV
+==============================================================================
+
+AKSES:
+┌─ Laporan Transaksi > Tombol "Export CSV"
+├─ Laporan Pendapatan > Tombol "Export CSV"
+└─ Inventory > Tombol "Export CSV"
+
+LANGKAH-LANGKAH:
+1. Buka halaman laporan (Laporan Transaksi / Laporan Pendapatan / Inventory)
+2. (Optional) Gunakan filter untuk pilih data tertentu
+3. Cari tombol berwarna hijau "Export CSV" atau "Download"
+4. Klik tombol
+5. Browser akan otomatis download file CSV
+
+MEMBUKA FILE CSV:
+├─ Microsoft Excel
+│  └─ Double-click file CSV > Excel akan buka otomatis
+├─ Google Sheets
+│  └─ Upload ke Google Drive > Open with > Google Sheets
+├─ LibreOffice Calc
+│  └─ Klik file CSV dengan kanan > Open with > LibreOffice
+└─ Apple Numbers
+   └─ Double-click file CSV > Numbers akan buka
+
+YANG DI-EXPORT:
+
+Laporan Transaksi Export:
+├─ ID Transaksi
+├─ Tanggal & Waktu
+├─ Nama Customer (atau "Guest")
+├─ Total Penjualan
+└─ Jumlah Item
+
+Laporan Pendapatan Export:
+├─ Tanggal
+├─ ID Transaksi
+├─ Customer
+├─ Total
+├─ Daftar Produk (nama + qty)
+└─ Total Summary di akhir
+
+Inventory Export:
+├─ ID
+├─ Nama Barang
+├─ Stok
+└─ Harga Barang
+
+CONTOH PENGGUNAAN:
+├─ Laporan bulanan untuk finance: Filter bulan > Export
+├─ Analisis penjualan: Laporan Pendapatan > Export
+├─ Stock opname: Inventory > Export
+└─ Archive dokumentasi: Simpan file CSV bulanan
+
+==============================================================================
+4️⃣ MANAJEMEN KATEGORI PRODUK
+==============================================================================
+
+AKSES:
+┌─ Sidebar Menu
+│  └─ Management
+│     └─ Kategori
+
+LAYOUT HALAMAN:
+┌────────────────┬──────────────────────┐
+│  Form Tambah   │  Daftar Kategori     │
+│  Kategori      │  yang Sudah Ada      │
+│ (Kiri)         │  (Kanan)             │
+└────────────────┴──────────────────────┘
+
+TAMBAH KATEGORI BARU:
+1. Di sebelah kiri, lihat form "Tambah Kategori Baru"
+2. Input "Nama Kategori":
+   ├─ Contoh: "Makanan", "Minuman", "Elektronik"
+   └─ Validasi: Tidak boleh ada nama kategori yang sama (unique)
+3. Input "Deskripsi" (Optional):
+   └─ Contoh: "Produk makanan jenis snack"
+4. Klik tombol biru "Tambah Kategori"
+5. Kategori akan muncul di tabel sebelah kanan
+
+EDIT KATEGORI:
+1. Di tabel daftar kategori, cari kategori yang mau diedit
+2. Klik icon pensil (edit) di kolom Aksi
+3. Modal popup akan muncul dengan form
+4. Edit nama atau deskripsi
+5. Klik "Simpan"
+
+HAPUS KATEGORI:
+1. Di tabel daftar kategori, cari kategori yang mau dihapus
+2. Klik icon tempat sampah (delete) di kolom Aksi
+3. Konfirmasi dengan klik OK
+4. Kategori akan dihapus
+
+LIHAT INFO:
+├─ Nama Kategori - nama yang ditampilkan
+├─ Jumlah Produk - berapa produk pakai kategori ini
+│  └─ Klik number untuk lihat produk apa saja
+└─ Aksi - edit / hapus
+
+CONTOH:
+├─ Ingin tambah kategori "Minuman Dingin"
+│  └─ Input nama > klik Tambah
+├─ Ingin ubah nama kategori "Makanan" jadi "Makanan Berat"
+│  └─ Klik edit > ubah nama > Simpan
+└─ Ingin hapus kategori yang tidak dipakai
+   └─ Klik hapus > konfirmasi
+
+PENTING:
+✅ Kategori bersifat opsional saat membuat barang
+✅ Satu barang hanya bisa punya satu kategori
+✅ Kategori membantu breakdown pendapatan per kategori
+✅ Gunakan kategori untuk analisis penjualan
+
+==============================================================================
+5️⃣ KODE PRODUK UNIK
+==============================================================================
+
+AKSES:
+┌─ Admin > Dashboard (Daftar Inventaris Terkini)
+├─ Admin > Form Tambah Barang
+└─ Admin > Form Edit Barang
+
+TAMBAH BARANG DENGAN KODE:
+1. Klik "Tambah Barang" (tombol biru di inventory)
+2. Lihat field baru: "Kode Produk"
+3. Input kode unik untuk produk:
+   ├─ Contoh format: "KPB001", "KDN001", "KET001"
+   ├─ Atau: "SKU-001", "PROD-001"
+   └─ Atau: "KD123456"
+4. Field ini OPTIONAL (boleh kosong)
+5. Klik "Simpan Barang"
+
+VALIDASI KODE:
+├─ Kode harus UNIK (tidak boleh sama dengan kode barang lain)
+├─ Jika kode sudah dipakai, akan error: "Kode sudah digunakan"
+└─ Solusi: Ganti kode dengan yang belum dipakai
+
+TEMPAT KODE DITAMPILKAN:
+├─ Tabel Inventory
+│  └─ Kolom "Informasi Barang" tampil "Kode: KPB001"
+├─ Tabel Dashboard
+│  └─ Sama seperti inventory
+├─ Invoice
+│  └─ Di table produk, baris "SKU: KPB001"
+└─ Form Edit Barang
+   └─ Bisa ubah kode saat edit
+
+EDIT KODE BARANG:
+1. Klik "Edit" di sebelah barang yang mau diubah kodenya
+2. Di field "Kode Produk", ubah kodenya
+3. Klik "Update Barang"
+4. Kode akan berubah
+
+CONTOH PENGGUNAAN:
+├─ Untuk barcode scanning:
+│  └─ Input kode standar industri, biar bisa scan langsung
+├─ Untuk inventory tracking:
+│  └─ Setiap produk punya kode unik, mudah cari
+├─ Untuk laporan:
+│  └─ Kode muncul di invoice sebagai SKU
+└─ Untuk supplier:
+   └─ Komunikasikan kode ke supplier untuk order
+
+TIPS:
+✅ Gunakan format konsisten (misal: "KD" + nomor)
+✅ Nomor bisa berdasarkan kategori atau urutan
+✅ Jangan gunakan spasi atau karakter special
+✅ Contoh format bagus: "KPB001", "KPB002", "KDN001"
+
+==============================================================================
+6️⃣ FILTER LAPORAN TRANSAKSI (SEARCHBAR)
+==============================================================================
+
+AKSES:
+┌─ Sidebar Menu
+│  └─ Reports & Stats
+│     └─ Laporan Transaksi
+
+LAYOUT:
+┌─────────────────────────────────────┐
+│ Filter Transaksi (Section baru)     │
+├─ Bulan [dropdown]                   │
+├─ Tahun [dropdown]                   │
+├─ Cari [text input]                  │
+├─ [Tombol Cari] [Tombol Reset]       │
+└─────────────────────────────────────┘
+
+FILTER PER BULAN:
+1. Klik dropdown "Bulan"
+2. Pilih bulan yang mau dilihat (Januari - Desember)
+3. Klik "Cari"
+4. Tabel akan update hanya menampilkan transaksi bulan tersebut
+
+FILTER PER TAHUN:
+1. Klik dropdown "Tahun"
+2. Pilih tahun yang mau dilihat
+3. Klik "Cari"
+4. Tabel akan update hanya menampilkan transaksi tahun tersebut
+
+KOMBINASI FILTER:
+1. Pilih Bulan & Tahun sekaligus
+2. Klik "Cari"
+3. Tabel akan filter berdasarkan kedua kriteria
+
+SEARCH (PENCARIAN):
+1. Kolom "Cari" adalah text input untuk mencari
+2. Bisa search dengan:
+   ├─ ID Transaksi (misal: "123")
+   └─ Nama Customer (misal: "Budi Santoso")
+3. Misal ketik "123" > akan muncul transaksi ID 123
+4. Misal ketik "Budi" > akan muncul semua transaksi dari customer "Budi"
+
+KOMBINASI LENGKAP:
+1. Pilih Bulan: Januari
+2. Pilih Tahun: 2026
+3. Ketik Cari: "Budi"
+4. Klik "Cari"
+5. Hasilnya: Semua transaksi dari Budi pada Januari 2026
+
+RESET FILTER:
+1. Klik tombol "Reset" (icon undo/spiral)
+2. Semua filter akan dihapus
+3. Akan menampilkan semua transaksi lagi
+
+EXPORT DENGAN FILTER:
+1. Set filter yang diinginkan
+2. Data di table akan ter-filter
+3. Klik "Export CSV"
+4. File CSV akan hanya berisi data yang ter-filter
+
+CONTOH PENGGUNAAN:
+├─ "Cari laporan transaksi Januari 2026"
+│  └─ Bulan: Jan, Tahun: 2026 > Cari
+├─ "Cari semua transaksi dari customer Budi"
+│  └─ Cari: "Budi" > Cari
+├─ "Cari transaksi nomor 42"
+│  └─ Cari: "42" > Cari
+└─ "Export laporan Desember 2025"
+   └─ Bulan: Des, Tahun: 2025 > Cari > Export CSV
+
+TIPS SEARCH:
+✅ Search case-insensitive (besar/kecil sama)
+✅ Bisa partial search (ketik "Bud" akan ketemu "Budi")
+✅ Search ID bisa partial (ketik "12" akan ketemu ID 123, 125, dll)
+✅ Kombinasikan dengan filter bulan/tahun untuk result lebih spesifik
+
+==============================================================================
+RINGKASAN CEPAT
+==============================================================================
+
+FITUR                   | AKSES                              | TOMBOL UTAMA
+─────────────────────────┼────────────────────────────────────┼──────────────
+Laporan Pendapatan      | Menu > Reports > Pendapatan        | Export CSV
+Return/Kembalian Admin  | Menu > Management > Return         | Approve/Reject
+Kategori Produk         | Menu > Management > Kategori       | Tambah/Edit
+Kode Produk             | Form Tambah/Edit Barang            | Input text
+Filter Laporan          | Menu > Reports > Laporan           | Cari / Reset
+Export ke CSV           | Setiap halaman laporan             | Download
+
+==============================================================================
+TROUBLESHOOTING
+==============================================================================
+
+Q: Kode barang sudah ada, error "Kode sudah digunakan"?
+A: Gunakan kode yang berbeda, setiap barang harus punya kode unik
+
+Q: Return qty melebihi yang dibeli?
+A: Sistem akan validasi, qty tidak boleh > qty pembelian
+
+Q: Kategori tidak muncul di form barang?
+A: Harus buat kategori dulu di Management > Kategori
+
+Q: Export file tidak muncul?
+A: Check folder Downloads browser, atau cek notifikasi unduhan
+
+Q: Filter hasil kosong?
+A: Mungkin tidak ada transaksi untuk filter tersebut, coba ubah filter
+
+Q: Stok tidak naik saat approve return?
+A: Check apakah return status berubah ke "Disetujui", stok auto-update
+
+==============================================================================
+TIPS PENGGUNAAN OPTIMAL
+==============================================================================
+
+1. KATEGORI:
+   ✅ Buat kategori di awal setup aplikasi
+   ✅ Gunakan nama kategori yang jelas & singkat
+   ✅ Gunakan untuk breakdown analisis penjualan
+
+2. KODE PRODUK:
+   ✅ Gunakan format konsisten di semua produk
+   ✅ Bisa pakai barcode yang ada dari supplier
+   ✅ Memudahkan stock opname & inventory audit
+
+3. LAPORAN PENDAPATAN:
+   ✅ Check setiap akhir bulan
+   ✅ Export untuk arsip & analisis
+   ✅ Compare dengan bulan sebelumnya untuk trend
+
+4. RETURN:
+   ✅ Proses return dengan segera agar stok update
+   ✅ Catat alasan return untuk quality control
+   ✅ Monitor return rate per barang
+
+5. FILTER LAPORAN:
+   ✅ Gunakan untuk quick report / daily check
+   ✅ Kombinasikan filter untuk data lebih spesifik
+   ✅ Export filtered data untuk follow-up
+
+==============================================================================
+KONTAK SUPPORT
+==============================================================================
+
+Jika ada masalah teknis atau fitur tidak berfungsi:
+1. Check database migration sudah jalan: php artisan migrate
+2. Clear cache: php artisan cache:clear
+3. Check file log: storage/logs/laravel.log
+4. Lihat FITUR_BARU.md untuk dokumentasi detail
+
+==============================================================================
+Versi: 1.0
+Dibuat: 12 February 2026
+Status: Ready untuk Production
+==============================================================================

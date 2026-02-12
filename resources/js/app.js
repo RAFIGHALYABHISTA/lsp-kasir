@@ -1,6 +1,4 @@
 import "./bootstrap";
-import "./notifications";
-import "./form-handler";
 
 // Auto-show flash messages dari Laravel
 const showFlashMessages = () => {
@@ -11,13 +9,35 @@ const showFlashMessages = () => {
             const data = JSON.parse(messagesScript.textContent);
 
             if (data.success && data.success !== null) {
-                notify.success("Berhasil", data.success);
+                Swal.fire({
+                    icon: "success",
+                    title: "Berhasil",
+                    text: data.success,
+                    confirmButtonColor: "#10b981",
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
             } else if (data.error && data.error !== null) {
-                notify.error("Error", data.error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: data.error,
+                    confirmButtonColor: "#ef4444",
+                });
             } else if (data.warning && data.warning !== null) {
-                notify.warning("Peringatan", data.warning);
+                Swal.fire({
+                    icon: "warning",
+                    title: "Peringatan",
+                    text: data.warning,
+                    confirmButtonColor: "#f59e0b",
+                });
             } else if (data.info && data.info !== null) {
-                notify.info("Informasi", data.info);
+                Swal.fire({
+                    icon: "info",
+                    title: "Informasi",
+                    text: data.info,
+                    confirmButtonColor: "#3b82f6",
+                });
             }
         } catch (e) {
             console.error("Error parsing flash messages:", e);

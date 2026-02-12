@@ -10,6 +10,31 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
+                <div>
+                    <label for="kode_barang" class="block text-sm font-semibold text-slate-700 mb-2">Kode Produk</label>
+                    <input type="text" name="kode_barang" id="kode_barang"
+                           class="w-full px-4 py-3 rounded-xl border-slate-200 focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all placeholder:text-slate-400 @error('kode_barang') border-red-500 @enderror"
+                           placeholder="Contoh: KPB001" value="{{ old('kode_barang') }}">
+                    @error('kode_barang')
+                        <p class="mt-2 text-xs text-red-600 font-medium">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="kategori_id" class="block text-sm font-semibold text-slate-700 mb-2">Kategori</label>
+                    <select name="kategori_id" id="kategori_id" class="w-full px-4 py-3 rounded-xl border-slate-200 focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all @error('kategori_id') border-red-500 @enderror">
+                        <option value="">Pilih Kategori</option>
+                        @foreach($kategoris as $kat)
+                            <option value="{{ $kat->id }}" {{ old('kategori_id') == $kat->id ? 'selected' : '' }}>
+                                {{ $kat->nama_kategori }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('kategori_id')
+                        <p class="mt-2 text-xs text-red-600 font-medium">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <div class="md:col-span-2">
                     <label for="nama_barang" class="block text-sm font-semibold text-slate-700 mb-2">Nama Produk</label>
                     <input type="text" name="nama_barang" id="nama_barang"
@@ -58,10 +83,13 @@
 
     @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('formTambahBarang');
-            form.addEventListener('submit', () => {
-                notify.loading('Menyimpan barang...', 'Mohon tunggu');
+        document.getElementById('formTambahBarang').addEventListener('submit', () => {
+            Swal.fire({
+                title: 'Menyimpan...',
+                text: 'Mohon tunggu',
+                didOpen: () => Swal.showLoading(),
+                allowOutsideClick: false,
+                allowEscapeKey: false
             });
         });
     </script>
